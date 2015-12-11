@@ -1,0 +1,100 @@
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>星云CDN登录</title>
+<link rel="icon" href="/static/img/logo_icon.png" type="image/x-icon">
+<script src="/static/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="/static/js/jquery-form.js"></script>
+<link rel="stylesheet" href="/static/css/reset.css"/>
+<link rel="stylesheet" href="/static/css/style_login.css" media="screen" type="text/css" />
+</head>
+
+
+<body onkeydown="on_return();">
+
+
+
+
+                        <div style="width:100%;text-align:center;padding-top:80px;">
+
+                            <img  style="height:100px;width:313px;" src="/static/img/logo.png" alt="星云CDN" />
+
+                        </div>
+
+
+<div id="window" style="display:none;">
+
+		 <form action="/login/" method="post" enctype="application/x-www-form-urlencoded" id="form1">
+		<input type="hidden" name="eventTarget" value="" />
+		<input type="hidden" name="eventArgument" value="" />
+		<input type="hidden" name="return_url" value="687474703A2F2F6D616E6167652E73636C6F75646D2E636F6D2F2FF0D2D4BCBF" />
+	<div class="page page-front">
+		<div class="page-content">
+			<div class="input-row">
+				<label class="label fadeIn">用户名</label>
+				<input  name="username" id="account" type="text" data-fyll="pineapple" class="input fadeIn delay1"/>
+			</div>
+			<div class="input-row">
+				<label class="label fadeIn delay2">密码</label>
+				<input name="password" id="pwd" type="password"  data-fyll="hackmeplease" class="input fadeIn delay3"/>
+			</div>
+
+
+			<div class="input-row perspective">
+				<span id="submit"  onClick="document.getElementById('form1').submit();" class="button load-btn fadeIn delay4">
+
+					<span class="default"><i class="ion-arrow-right-b"></i>登录</span>
+					<div class="load-state">
+						<div class="ball"></div>
+						<div class="ball"></div>
+						<div class="ball"></div>
+					</div>
+				</span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- <div class="page page-back">
+		<div class="page-content">
+			<img src="avatar.jpg" class="avatar"/>
+			<p class="welcome">欢迎回来！</p>
+			<div class="perspective">
+				<button class="button inline trigger-anim-replay"><i class="ion-refresh"></i>重播</button>
+			</div>
+		</div>
+	</div>-->
+	 </form> 
+</div>
+<!--<iframe src="http://zt-2200442.ztgame.com:8888/cloud_site/footer.html" frameborder="0" marginheight="0" marginwidth="0" frameborder="0" scrolling="auto" id="ifm" name="header" onload="javascript:dyniframesize('header');" width="100%" ></iframe>-->
+</body>
+</html>
+
+<!--<script type="text/javascript" src='scripts/fyll.js'></script>-->
+<script type="text/javascript" src="/static/js/index.js"></script>
+
+
+
+<script type="text/javascript" language="JavaScript">
+    {% autoescape off %}
+       {{ error }}
+    {% endautoescape %}
+
+
+	 function on_return(){
+  if(window.event.keyCode == 13){
+   if (document.all('submit')!=null){
+     // document.all('sub').click();
+	 $('#submit').click();
+      }
+  }
+ }
+</script>

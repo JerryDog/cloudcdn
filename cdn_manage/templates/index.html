@@ -1,0 +1,190 @@
+{% extends "base.html" %} 
+{% block title %}<title>概览</title>{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/overview.css">
+{% endblock %}
+{% block content %} 
+
+			<!-- start: Content -->
+			<div id="content" class="span10"  style="background: #F7F6F5;">
+			
+			
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="/">Home</a> 
+					<i class="icon-angle-right"></i>
+				</li>
+				<li><a href="#">Dashboard</a></li>
+			</ul>
+
+			<div class="row-fluid">
+			<div class="zong">
+                <div class="title shadow_border">
+                  <h3 class="text yh" id="title_text">数据总览 {{ month_range }}</h3>
+                </div>
+				<div class="zongl oz">
+					<div class="left oz shadow_border">
+                            <h3 class="yye yh" style="color: #626262;">日带宽峰值图</h3>
+                            <div id="dailyPeak">
+
+                            </div>
+					</div>
+					<div class="cont_right" style="text-align: center">
+						<div class="fuwu shadow_border" style="margin-top:0px;">
+							<h3 class="f16" style="color: #626262;">已加速频道总数</h3>
+							<b class="yh" id="serviceCount">{{ all_domains }}</b>
+						</div>
+
+						<div class="zongliu shadow_border">
+							<h4 class="f16" style="color: #626262;">本月带宽峰值</h4>
+							<b class="yh" id="totalFlowBps"></b>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="zongla shadow_border">
+					<h3 class="yye yh">频道月带宽峰值</h3>
+					<table class="table table-hover table-striped table-bordered"
+                      style="text-indent: 10px;margin-left: 23px;width: 90%;font-family: Microsoft Yahei,sans-serif;"
+                      id="domain">
+                        <thead>
+							  <tr>
+								  <th style="font-weight: normal;background: #FAF9FC;">频道</th>
+								  <th style="font-weight: normal;background: #FAF9FC;">月带宽峰值</th>
+                                  <th style="font-weight: normal;background: #FAF9FC;">峰值时间</th>
+							  </tr>
+						</thead>
+                        <tbody>
+                          {% for d in domain_bandwidth %}
+							<tr>
+								<td class="center">{{ d.domain_name }}</td>
+
+								<td class="center">{{ d.max_value }} Mbps</td>
+
+                                <td class="center">{{ d.max_time|date:"Y年m月d日 H:i" }}</td>
+							</tr>
+                          {% endfor %}
+						  </tbody>
+					</table>
+				</div>
+			</div>
+
+</div>
+
+	</div><!--/.fluid-container-->
+	
+			<!-- end: Content -->
+
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/js/highcharts.js"></script>
+<script type="text/javascript">
+
+function bandwidth(){
+     $.ajax({
+        type: "POST",
+        url: "/index_map/",
+        beforeSend: function () {
+        // laading
+         $("#dailyPeak").html('<div style="margin:0 auto;width:128px;"><img src="/static/img/loading.gif"></div>');
+        },
+        success: function(data) {
+            map_data = data.mapData;
+            var data_in_float = new Array();
+            for (var i=0;i<map_data.length;i++){
+                if (typeof(map_data[i]) == "string"){
+                    data_in_float.push(null)
+                }else{
+                    data_in_float.push(map_data[i])
+                };
+            };
+            $("#totalFlowBps").html(data.maxBandwidth + ' Mbps');
+            renderChart(data_in_float, data.xAxis);
+        },
+        error: function() {
+            alert("获取流量失败，请刷新再试");
+        },
+      });
+}
+
+function renderChart(dailyPeak, dateList){
+        var chart,
+        renderTo = 'dailyPeak',
+        title =  '',
+        yAxisTitle = '',
+        valueSuffix = '';
+
+        data =  dailyPeak;
+        chart = new Highcharts.Chart({
+            chart: {
+                height: 290,
+                renderTo: renderTo,
+                type: 'column',
+            },
+            xAxis: {
+                type: 'category',
+                categories: dateList,
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,  //
+                title : {
+                    text : ''
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value +'M';
+                    }
+                },
+            },
+            legend:{
+                enabled: false
+            },
+            tooltip: {
+                formatter: function() {
+                    var ret = "";
+                    ret += '时间: <b>' + this.key + "</b><br/>";
+                    ret += '带宽: <b>' + this.point.y + 'Mbps' + "</b><br/>";
+                    return ret;
+                }
+            },
+            plotOptions: {
+                series: {
+                    marker: {enabled: false},
+                },
+                area: {
+                    stacking: 'normal',
+                    lineWidth: 2,
+                    shadow: false,
+                    animation: {duration: 100},
+                },
+                line: {
+                    lineWidth: 2,
+                    animation: {duration: 100},
+                },
+            },
+            title: {
+                text: '',
+            },
+            series: [{
+              name: '',
+              data: data
+           }],
+
+        });
+        return chart;
+    }
+bandwidth();
+
+</script>
+{% endblock %}
