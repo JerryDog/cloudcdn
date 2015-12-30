@@ -488,3 +488,33 @@ def bandwidth_csv(req):
         else:
             result = json.loads(res.read()).get("error")
             return HttpResponse(result)
+
+
+@csrf_exempt
+def analysis(req):
+    if req.method == 'POST':
+        domain_name = req.POST.get('domain_name')
+        start = req.POST.get('start')
+        end = req.POST.get('end')
+        project_id = req.session['project_id']
+        token = req.session.get('token')
+        api = DomainApi(token)
+        json_str = {"domainName": domain_name, "start": start, "end": end, "project_id": project_id}
+        res = api.analysis(json_str)
+        result = json.loads(res.read())
+        return HttpResponse(json.dumps(result), content_type="application/json")
+    else:
+        if not req.session.has_key("project_id"):
+            return HttpResponseRedirect('/login/')
+        else:
+            project_id = req.session['project_id']
+        username = req.COOKIES.get('username')
+        if username == settings.SUPERADMIN:
+            domains = Domain.objects.using('api_db').exclude(domain_status='Delete').all()
+        else:
+            domains = Domain.objects.using('api_db').exclude(domain_status='Delete').filter(project_id=project_id)
+        all_domains = ''
+        for d in domains:
+            all_domains = all_domains + ',' + d.domain_name
+        project_list = req.session['project_list']
+        return render_to_response("analysis.html", locals())

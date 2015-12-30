@@ -151,6 +151,10 @@ function bandwidth(obj){
             $("#prefetch_submit_button").attr({ disabled: "disabled" });
         },
         success: function(data) {
+            if(data.statusCode == 302){
+                alert("页面超时，请重新登陆");
+                window.location.reload();
+            };
             if(data.indexOf(";") > 0){
                draw(data);
             }else{

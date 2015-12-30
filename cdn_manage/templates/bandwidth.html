@@ -188,7 +188,11 @@ function bandwidth(obj){
             // 禁用按钮防止重复提交
             $("#prefetch_submit_button").attr({ disabled: "disabled" });
         },
-        success: function(data) {
+        success: function(data, textStatus) {
+            if(data.statusCode == 302){
+                alert("页面超时，请重新登陆");
+                window.location.reload();
+            };
             if(!data.error){
                 data_in_float = data.data;
                 pointStart = data.pointStart;
@@ -200,12 +204,12 @@ function bandwidth(obj){
                 $("#result_of_url").modal('show');
             }
         },
-        complete: function () {
-            $("#prefetch_submit_button").removeAttr("disabled");
-        },
         error: function() {
             alert("error");
         },
+        complete: function () {
+            $("#prefetch_submit_button").removeAttr("disabled");
+        }
       });
 }
 

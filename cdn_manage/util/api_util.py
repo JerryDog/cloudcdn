@@ -168,6 +168,17 @@ class DomainApi(object):
         LOG.info("Bandwidth Body: %s" % rq_body)
         return res
 
+
+    def analysis(self, json_str):
+        rq_url = '/cdn_api/analysis'
+        method = 'GET'
+        rq_body = json.JSONEncoder().encode(json_str)
+        res = self.req(method, rq_url, rq_body)
+        LOG.info("Analysis Request Url: %s" % rq_url)
+        LOG.info("Analysis status:%s, reason:%s" % (res.status, res.reason))
+        LOG.info("Analysis Body: %s" % rq_body)
+        return res
+
     def req(self, method, rq_url, rq_body=''):
         rq_headers = {"Content-type": 'application/json',
                       'X-Auth-Token': self.token}

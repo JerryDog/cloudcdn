@@ -320,6 +320,10 @@ function post_with_ajax(text){
         async: false,
         dataType: "text",
         success: function(data) {
+            if(data.statusCode == 302){
+                alert("页面超时，请重新登陆");
+                window.location.reload();
+            };
             //$("#confirmDelete").modal('hide');
             //$("#domain_table").html(data);
             //$("#ddAlert").fadeIn();
@@ -383,6 +387,10 @@ function editDomainAjax(domain_id){
         url: "/edit_domain/"+domain_id+"/",
         data: {"domain_ids": domain_id},
         success: function(data) {
+            if(data.statusCode == 302){
+                alert("页面超时，请重新登陆");
+                window.location.reload();
+            };
             $("#editModalBody").html(data);
             $("#edit_domain_form").attr("action","/update_domain/"+domain_id+"/")
             $("#editDomainModal").modal('show');
