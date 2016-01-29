@@ -19,6 +19,3 @@ def req(rq_body=''):
 
 res = req()
 
-print 'aa ',res.read()
-
-print 'bbb', res.read()
