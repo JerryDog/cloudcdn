@@ -467,13 +467,13 @@ def bandwidth_csv(req):
     if req.method == 'GET':
         import csv
 
-        domain_name = req.GET.getlist('domain_name')
+        domain_name = req.GET.get('domain_name')
         start = req.GET.get('start')
         end = req.GET.get('end')
         project_id = req.session['project_id']
         token = req.session.get('token')
         api = DomainApi(token)
-        json_str = {"domainName": ','.join(domain_name), "start": start, "end": end, "project_id": project_id}
+        json_str = {"domainName": domain_name, "start": start, "end": end, "project_id": project_id}
         res = api.bandwidth(json_str)
         if res.status == 200:
             return_json_str = json.loads(res.read())

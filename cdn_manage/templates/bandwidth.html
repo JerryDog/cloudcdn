@@ -194,11 +194,14 @@ function bandwidth(obj){
                 window.location.reload();
             };
             if(!data.error){
+                chk_value = [];
+                $("input[name='domain_name']:checked").each(function(){
+chk_value.push($(this).val())});
                 data_in_float = data.data;
                 pointStart = data.pointStart;
                 draw(data_in_float,pointStart);
                 $("#download_csv").removeAttr("disabled");
-                $("#download_csv").attr("href","/bandwidth_csv/?domain_name="+$("input[name='domain_name']:checked").val()+"&start=" + $("#id_start").val() + "&end=" + $("#id_end").val());
+                $("#download_csv").attr("href","/bandwidth_csv/?domain_name=" + chk_value + "&start=" + $("#id_start").val() + "&end=" + $("#id_end").val());
             }else{
                 $("#content_of_url").html(data.error);
                 $("#result_of_url").modal('show');
