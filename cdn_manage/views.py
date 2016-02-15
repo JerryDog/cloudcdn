@@ -95,7 +95,10 @@ def index_table(req):
                 max_value = max([float(j.bandwidth) for j in single_domain_obj])
                 # 反推最大带宽出现的时间
                 max_time = DailyBandwidth.objects.using('api_db')\
-                    .filter(domain_name=d.domain_name).filter(bandwidth=max_value)
+                    .filter(domain_name=d.domain_name)\
+                    .filter(date__lte=datetime.datetime.today())\
+                    .filter(date__gte=datetime.datetime.now().strftime('%Y-%m-01'))\
+                    .filter(bandwidth=max_value)
                 max_time = max_time[0].date
             else:
                 max_value = '--'
