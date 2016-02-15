@@ -1,0 +1,22 @@
+<table class="table table-hover table-striped table-bordered"
+                      style="text-indent: 10px;margin-left: 23px;width: 90%;font-family: Microsoft Yahei,sans-serif;"
+                      id="domain">
+                        <thead>
+							  <tr>
+								  <th style="font-weight: normal;background: #FAF9FC;">频道</th>
+								  <th style="font-weight: normal;background: #FAF9FC;">月带宽峰值</th>
+                                  <th style="font-weight: normal;background: #FAF9FC;">峰值时间</th>
+							  </tr>
+						</thead>
+                        <tbody>
+                          {% for d in domain_bandwidth %}
+							<tr>
+								<td class="center">{{ d.domain_name }}</td>
+
+								<td class="center">{{ d.max_value }} Mbps</td>
+
+                                <td class="center">{{ d.max_time|date:"Y年m月d日 H:i" }}</td>
+							</tr>
+                          {% endfor %}
+						  </tbody>
+					</table>

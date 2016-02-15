@@ -68,21 +68,41 @@ def index(req):
     else:
         all_domains = len(domains)
 
-    domain_bandwidth = []
-    for d in domains:
-        single_domain_obj = DailyBandwidth.objects.using('api_db').filter(domain_name=d.domain_name).order_by("date")
-        if single_domain_obj:
-            max_value = max([float(j.bandwidth) for j in single_domain_obj])
-            # 反推最大带宽出现的时间
-            max_time = DailyBandwidth.objects.using('api_db')\
-                .filter(domain_name=d.domain_name).filter(bandwidth=str(max_value))
-            max_time = max_time[0].date
-        else:
-            max_value = '--'
-            max_time = '--'
-        domain_bandwidth.append(MonthItem(d.domain_name, max_value, max_time))
-
     return render_to_response('index.html', locals())
+
+
+@csrf_exempt
+def index_table(req):
+    if req.method == "POST":
+        if not req.session.has_key("project_id"):
+            return HttpResponseRedirect('/login/')
+        else:
+            project_id = req.session['project_id']
+        username = req.COOKIES.get('username')
+        if username == settings.SUPERADMIN:
+            #domains = Domain.objects.using('api_db').exclude(domain_status='Delete').all()
+            domains = Domain.objects.using('api_db').filter(domain_status='Deployed')
+        else:
+            #domains = Domain.objects.using('api_db').exclude(domain_status='Delete').filter(project_id=project_id)
+            domains = Domain.objects.using('api_db').filter(domain_status='Deployed').filter(project_id=project_id)
+
+        domain_bandwidth = []
+        for d in domains:
+            single_domain_obj = DailyBandwidth.objects.using('api_db').filter(domain_name=d.domain_name)\
+                .filter(date__lte=datetime.datetime.today())\
+                .filter(date__gte=datetime.datetime.now().strftime('%Y-%m-01')).order_by("date")
+            if single_domain_obj:
+                max_value = max([float(j.bandwidth) for j in single_domain_obj])
+                # 反推最大带宽出现的时间
+                max_time = DailyBandwidth.objects.using('api_db')\
+                    .filter(domain_name=d.domain_name).filter(bandwidth=max_value)
+                max_time = max_time[0].date
+            else:
+                max_value = '--'
+                max_time = '--'
+            domain_bandwidth.append(MonthItem(d.domain_name, max_value, max_time))
+        return render_to_response('index_table.html', locals())
+
 
 
 @csrf_exempt
