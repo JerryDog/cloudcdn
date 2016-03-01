@@ -51,7 +51,7 @@
     </div>
     <div class="row-fluid">
 		<div class="span12">
-           <div id="resp_content"></div>
+           <div id="resp_content" style="position:absolute;right:50px;"></div>
         </div>
     </div>
 
@@ -156,7 +156,18 @@ function bandwidth(obj){
                 window.location.reload();
             };
             if(data.indexOf(";") > 0){
-               draw(data);
+               var arrayData = data.split(";");
+               var date_list = arrayData[0].split(",");
+               var flow_list = arrayData[1].split(",");
+               var value_sum = arrayData[2];
+               flow_list_float = new Array();
+               for (var i=0;i<flow_list.length;i++){
+                  flow_list_float.push(parseFloat(flow_list[i]));
+               }
+               $("#resp_content").html('<font style="font-size: 16px;font-family: inherit;' +
+                  'font-weight: bold;color: #626262;">总和： <font style="color: #F76969;">'
+                  + value_sum + '</font> MB</font>');
+               draw(date_list, flow_list_float);
             }else{
                 $("#content_of_url").html(data);
                 $("#result_of_url").modal('show');
@@ -172,14 +183,7 @@ function bandwidth(obj){
 }
 
 
-function draw(data) {
-                 var arrayData = data.split(";");
-                 var date_list = arrayData[0].split(",");
-                 var flow_list = arrayData[1].split(",");
-                 flow_list_float = new Array();
-                 for (var i=0;i<flow_list.length;i++){
-                    flow_list_float.push(parseFloat(flow_list[i]));
-                }
+function draw(date_list, flow_list_float) {
                  $('#chart').highcharts({
                      credits: {
                          enabled: false

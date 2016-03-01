@@ -220,6 +220,12 @@ function handlerCache(type, textarea_id){
         url: "/handler_cache/",
         async: false,
         data: {"url": $(textarea_id).val(), "type": type},
+        beforeSend: function () {
+            // 禁用按钮防止重复提交
+            $("#url_submit_button").attr({ disabled: "disabled" });
+            $("#dir_submit_button").attr({ disabled: "disabled" });
+            $("#prefetch_submit_button").attr({ disabled: "disabled" });
+        },
         success: function(data) {
             $("#content_of_url").html(data);
             $("#result_of_url").modal('show');
@@ -227,6 +233,11 @@ function handlerCache(type, textarea_id){
         error: function() {
             alert("error");
         },
+        complete: function () {
+            $("#url_submit_button").removeAttr("disabled");
+            $("#dir_submit_button").removeAttr("disabled");
+            $("#prefetch_submit_button").removeAttr("disabled");
+        }
       });
 }
 

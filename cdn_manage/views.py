@@ -219,10 +219,13 @@ def domain_manage(req):
         project_id = req.session['project_id']
         username = req.COOKIES.get('username')
         token = req.session.get('token')
+
+        ip_list = ip_str.split('\r\n')
+        ip_list.reverse()
         try:
             api = DomainApi(token)
             domain = common_struct.Domain(domain_name=domain_name,
-                                          origin_ips=ip_str.split('\r\n'),
+                                          origin_ips=ip_list,
                                           test_url=test_url,
                                           service_type=service_type,
                                           cache_behaviors=cache_rules)
@@ -314,10 +317,13 @@ def update_domain(req, domain_table_id):
         test_url = d.test_url
         domain_id = d.domain_id
         service_type = d.domain_type
+
+        ip_list = ip_str.split('\r\n')
+        ip_list.reverse()
         try:
             api = DomainApi(token)
             domain = common_struct.Domain(domain_name=domain_name,
-                                          origin_ips=ip_str.split('\r\n'),
+                                          origin_ips=ip_list,
                                           test_url=test_url,
                                           domain_id=domain_id,
                                           service_type=service_type,
@@ -459,13 +465,14 @@ def flow_value(req):
         if res.status == 200:
             return_json_str = json.loads(res.read())
             flow_list = return_json_str["flowValue"]
+            value_sum = return_json_str["totalCount"]
             date = []
             flow = []
             for f in flow_list:
                 date.append(f.get('time'))
                 flow.append(f.get('value'))
-            str = ','.join(date) + ';' + ','.join(flow)
-            result = str
+            str_res = ','.join(date) + ';' + ','.join(flow) + ';' + str(value_sum)
+            result = str_res
         else:
             result = json.loads(res.read()).get("error")
         return HttpResponse(result)
