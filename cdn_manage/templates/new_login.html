@@ -45,9 +45,15 @@
 			</div>
 			<div class="input-row">
 				<label class="label fadeIn delay2">密码</label>
-				<input name="password" id="pwd" type="password"  data-fyll="hackmeplease" class="input fadeIn delay3"/>
+				<input name="password" id="pwd" type="password"  data-fyll="hackmeplease" class="input fadeIn delay2"/>
 			</div>
-
+			<div class="input-row" style="height: 62px;">
+				<label class="label fadeIn delay3">验证码</label>
+				<input name="verify_code" id="verify_code" type="text"  data-fyll="hackmeplease" class="input fadeIn delay3"
+				style="width:50%;float:left;"/>
+				<span><img class="input fadeIn delay3" onclick="this.setAttribute('src','/code/?nocache='+Math.random());"
+						   style="-webkit-user-select: none;width:40%;float:right;height: 40px;" src="/code/"></span>
+			</div>
 
 			<div class="input-row perspective">
 				<span id="submit"  onClick="document.getElementById('form1').submit();" class="button load-btn fadeIn delay4">

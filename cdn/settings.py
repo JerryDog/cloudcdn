@@ -27,12 +27,12 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            'level':'INFO',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_PATH+'/logs/','all.log'),
-            'maxBytes': 1024*1024*5, # 5 MB
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH + '/logs/', 'all.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
-            'formatter':'standard',
+            'formatter': 'standard',
         },
         'null': {
             'level': 'DEBUG',
@@ -45,31 +45,31 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
-         'request_handler': {
-            'level':'INFO',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_PATH+'/logs/','script.log'),
-            'maxBytes': 1024*1024*5, # 5 MB
+        'request_handler': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH + '/logs/', 'script.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
-            'formatter':'standard',
+            'formatter': 'standard',
         },
         'scprits_handler': {
-            'level':'INFO',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_PATH+'/logs/','script.log'),
-            'maxBytes': 1024*1024*5, # 5 MB
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH + '/logs/', 'script.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
-            'formatter':'standard',
+            'formatter': 'standard',
         },
     },
-     'loggers': {
+    'loggers': {
         'django': {
-            'handlers': ['default','console'],
+            'handlers': ['default', 'console'],
             'level': 'INFO',
             'propagate': False
         },
-        'cdn_manage':{
-            'handlers': ['default','console'],
+        'cdn_manage': {
+            'handlers': ['default', 'console'],
             'level': 'INFO',
             'propagate': True
         },
@@ -99,7 +99,6 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -126,7 +125,6 @@ ROOT_URLCONF = 'cdn.urls'
 
 WSGI_APPLICATION = 'cdn.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
@@ -134,7 +132,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cdn',
-        'USER' : 'root',
+        'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
@@ -142,7 +140,7 @@ DATABASES = {
     'api_db': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cloud_cdn',
-        'USER' : 'root',
+        'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
@@ -162,19 +160,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-TEMPLATE_DIRS=(
-	os.path.join(BASE_DIR,'templates'),
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
 )
 
 STATIC_URL = '/static/'
 
-SUPERADMIN = 'test'
-SUPERADMIN_PD = 'test'
+SUPERADMIN = 'cloudcdn_admin'
+SUPERADMIN_PD = '1qaz2wsx'
 COOKIES_TIMEOUT = 1200
-
 
 KEYSTONE = "192.168.39.170:5000"
 API_SERVER = '127.0.0.1:5000'

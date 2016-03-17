@@ -1,7 +1,7 @@
 # coding:utf8
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
-from util.api_util import DomainApi, getTokenFromKS, MonthItem, mergeData
+from util.api_util import DomainApi, getTokenFromKS, MonthItem, mergeData, create_validate_code
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from models import Domain, CacheRules, TaskList, DailyBandwidth
@@ -13,6 +13,7 @@ import datetime
 import calendar
 import traceback
 from util import common_struct
+import StringIO
 from collections import OrderedDict
 
 reload(sys)
@@ -154,6 +155,14 @@ def index_map(req):
 @csrf_exempt
 def login(req):
     if req.method == "POST":
+        verify_code = req.POST.get('verify_code')
+        s_code = req.session['verify_code']
+        if not verify_code:
+            error = 'alert("请输入验证码!");'
+            return render_to_response('new_login.html', locals())
+        if verify_code != s_code:
+            error = 'alert("验证码错误!");'
+            return render_to_response('new_login.html', locals())
         username = req.POST.get('username')
         password = req.POST.get('password')
         if username == settings.SUPERADMIN and password == settings.SUPERADMIN_PD:
@@ -171,7 +180,7 @@ def login(req):
             return response
         else:
             if project_list == 'ConnError':
-                error = '链接超时'
+                error = 'alert("链接超时");'
                 LOG.error('User %s login timeout!' % username)
             else:
                 LOG.info('User %s login wrong password' % username)
@@ -548,3 +557,13 @@ def analysis(req):
             all_domains = all_domains + ',' + d.domain_name
         project_list = req.session['project_list']
         return render_to_response("analysis.html", locals())
+
+
+def code(req):
+    #把strs发给前端,或者在后台使用session保存
+    code_img, strs = create_validate_code()
+    buf = StringIO.StringIO()
+    code_img.save(buf,'JPEG',quality=70)
+    buf_str = buf.getvalue()
+    req.session['verify_code'] = strs
+    return HttpResponse(buf_str, 'image/jpeg')

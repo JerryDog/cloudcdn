@@ -26,6 +26,7 @@ urlpatterns = patterns('',
                        url(r'^flow_value/$', views.flow_value, name='flow_value'),
                        url(r'^bandwidth_csv/$', views.bandwidth_csv, name='bandwidth_csv'),
                        url(r'^analysis/$', views.analysis, name='analysis'),
+                       url(r'^code/$', views.code, name='code'),
 )
 
 if settings.DEBUG is False:

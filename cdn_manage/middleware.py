@@ -8,6 +8,8 @@ class QtsAuthenticationMiddleware(object):
         if request.path != '/login/':
             if "username" in request.COOKIES:
                 pass
+            elif request.path == '/code/':
+                pass
             else:
                 if request.method == 'POST':
                     resp_json = {'statusCode': 302}
