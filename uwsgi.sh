@@ -1,34 +1,37 @@
-#! /bin/bash
+#!/bin/bash
+# for django project
 
-start() {
-    echo "start uwsgi..."
-    cd /usr/local/cdn
-    /usr/bin/uwsgi -x djangochina_socket.xml
+proj_name='cloudcdn'
 
-}
+if [ ! -n "$1" ]
+then
+    echo "Usages: sh uwsgi.sh [start|stop|restart]"
+    exit 0
+fi
 
-stop() {
-    echo "kill process of uwsgi..."
-    echo `/sbin/pidof -s uwsgi`
-    kill -9 `/sbin/pidof uwsgi`
-}
+if [ $1 = start ]
+then
+    psid=`ps aux | grep "django_${proj_name}" | grep -v "grep" | wc -l`
+    if [ $psid -eq 4 ]
+    then
+        echo "${proj_name} is running!"
+        exit 0
+    else
+        /usr/bin/uwsgi -x django_${proj_name}.xml
+        nginx -s reload
+        echo "Start ${proj_name} service [OK]"
+    fi
 
-restart() {
-    echo -n "uwsgi restart..."
-    echo
-    stop
-    echo '---------------------------------------------'
-    start
-}
 
-case "$1" in
- start)
-     start;;
- stop)
-     stop;;
- restart)
-     restart;;
- *)
-     echo "Usage: $0 {start|stop|restart}"
-     exit 1
-esac
+elif [ $1 = stop ];then
+    ps aux | grep "django_${proj_name}" | grep -v "grep" |awk '{print $2}'|xargs kill -9
+    echo "Stop ${proj_name} service [OK]"
+elif [ $1 = restart ];then
+    ps aux | grep "django_${proj_name}" | grep -v "grep" |awk '{print $2}'|xargs kill -9
+    /usr/bin/uwsgi -x django_${proj_name}.xml
+    nginx -s reload
+    echo "Restart ${proj_name} service [OK]"
+
+else
+    echo "Usages: sh uwsgi.sh [start|stop|restart]"
+fi
