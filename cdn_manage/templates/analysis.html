@@ -127,8 +127,10 @@ Date.prototype.format =function(format)
 
 $(function(){
     $("#cf").hide();
-    start = new Date().format('yyyy-MM-01');
-    end = new Date().format('yyyy-MM-dd');
+    var dd = new Date();
+    dd.setDate(dd.getDate()-1);
+    start = dd.format('yyyy-MM-dd');
+    end = dd.format('yyyy-MM-dd');
     $("#id_start").val(start);
     $("#id_end").val(end);
 });
